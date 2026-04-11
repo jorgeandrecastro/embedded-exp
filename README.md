@@ -9,6 +9,14 @@ Markdown
 Développé par **Jorge Andre Castro** 
 ---
 
+
+## ⚠️ Disclaimer : Domaine de définition
+
+Cette crate est optimisée pour le format **Q15 signé** (plage `[-1.0, 1.0[`). 
+En raison des contraintes mathématiques de ce format :
+- **Entrées négatives ($x < 0$)** : Précision maximale (< 10 ULP). Idéal pour les fonctions d'activation (Sigmoïde, Softmax) et la décroissance de signaux.
+- **Entrées positives ($x \geq 0$)** : Puisque $e^x$ dépasse immédiatement $1.0$, la fonction **sature systématiquement à `i16::MAX`** (0.9999...).
+
 ## 🚀 Pourquoi embedded-exp ?
 
 Dans le monde de l'embarqué (`no_std`), le calcul de l'exponentielle est souvent soit trop lourd (flottants/libm), soit imprécis. `embedded-exp` propose une approche **purement entière** optimisée pour les processeurs sans unité de calcul flottant (FPU) comme le RP2040 (Cortex-M0+), tout en brillant sur le RP2350 (Cortex-M33).
@@ -32,7 +40,7 @@ Ajoutez ceci à votre `Cargo.toml` :
 
 ```toml
 [dependencies]
-embedded-exp = "0.1.0"
+embedded-exp = "0.1.1"
 Exemple simple :
 Rust
 use embedded_exp::exp_q15;
