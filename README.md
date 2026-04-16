@@ -1,21 +1,21 @@
-Markdown
-# 🦅 embedded-exp
+# embedded-exp
 
 [![Crates.io](https://img.shields.io/crates/v/embedded-exp.svg)](https://crates.io/crates/embedded-exp)
 [![License: GPL-2.0](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 **Exponentielle en virgule fixe Q15 ultra-rapide et déterministe pour systèmes embarqués.**
 
-Développé par **Jorge Andre Castro** 
 ---
 
+## Update Version 0.1.2 
+Choix de #![forbid(unsafe_code)] pour plus de fiabilité et choix de opt-level = 3 dans Cargo.toml pour une vitesse maximale.
 
 ## ⚠️ Disclaimer : Domaine de définition
 
 Cette crate est optimisée pour le format **Q15 signé** (plage `[-1.0, 1.0[`). 
 En raison des contraintes mathématiques de ce format :
-- **Entrées négatives ($x < 0$)** : Précision maximale (< 10 ULP). Idéal pour les fonctions d'activation (Sigmoïde, Softmax) et la décroissance de signaux.
-- **Entrées positives ($x \geq 0$)** : Puisque $e^x$ dépasse immédiatement $1.0$, la fonction **sature systématiquement à `i16::MAX`** (0.9999...).
+- **Entrées négatives (x < 0)** : Précision maximale (< 10 ULP). Idéal pour les fonctions d'activation (Sigmoïde, Softmax) et la décroissance de signaux.
+- **Entrées positives (x \geq 0)** : Puisque e^x dépasse immédiatement 1.0, la fonction **sature systématiquement à `i16::MAX`** (0.9999...).
 
 ## 🚀 Pourquoi embedded-exp ?
 
@@ -31,8 +31,8 @@ Dans le monde de l'embarqué (`no_std`), le calcul de l'exponentielle est souven
 
 La crate utilise une **réduction d'intervalle** couplée à une **approximation polynomiale de Taylor de degré 4** :
 1. `x = n·ln(2) + r`
-2. `e^x = 2^n · e^r` (le facteur $2^n$ est géré par un simple décalage de bits).
-3. `e^r` est calculé via Taylor sur l'intervalle $[0, \ln(2)[$.
+2. `e^x = 2^n · e^r` (le facteur 2^n est géré par un simple décalage de bits).
+3. `e^r` est calculé via Taylor sur l'intervalle [0, \ln(2)[.
 
 ## 🛠 Utilisation
 
@@ -40,9 +40,9 @@ Ajoutez ceci à votre `Cargo.toml` :
 
 ```toml
 [dependencies]
-embedded-exp = "0.1.1"
+embedded-exp = "0.1.2"
 Exemple simple :
-Rust
+```rust
 use embedded_exp::exp_q15;
 
 fn main() {
@@ -53,6 +53,7 @@ fn main() {
     // Résultat : ~19874 (soit ~0.6065 réel)
     println!("Résultat Q15 : {}", result);
 }
+```
 ⚖️ Licence
 Copyright (C) 2026 Jorge Andre Castro.
 

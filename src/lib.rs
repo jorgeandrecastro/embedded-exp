@@ -11,11 +11,11 @@
 //!
 //! ## Caractéristiques
 //!
-//! - `#![no_std]` — aucune dépendance à la bibliothèque standard
+//! - `#![no_std]` aucune dépendance à la bibliothèque standard
 //! - Arithmétique entière pure (pas de flottants, pas de `libm`)
 //! - Compatible RP2040 (Cortex-M0+) et RP2350 (Cortex-M33)
 //! - Algorithme : Réduction d'intervalle + approximation polynomiale de Taylor (degré 4)
-//! - Temps d'exécution **constant** (déterministe) — idéal pour les noyaux temps réel
+//! - Temps d'exécution **constant** (déterministe) idéal pour les noyaux temps réel
 //! - Précision < 10 ULP sur toute la plage `[-1.0, 0[`
 //!
 //! ## Format Q15
@@ -61,6 +61,7 @@
 //! ```
 
 #![no_std]
+#![forbid(unsafe_code)]
 
 /// ln(2) en Q15 : 0.693147… × 32768 = 22713
 const LN2_Q15: i32 = 22713;
@@ -85,14 +86,14 @@ pub fn exp_q15(x: i16) -> i16 {
     // -10.0 en Q15 serait -327680, mais x est i16. On couvre toute la plage.
     let x_i32 = x as i32;
 
-    // --- Étape 1 : Réduction d'intervalle ---
+    // Étape 1 : Réduction d'intervalle 
     // n = floor(x / ln2)
     let n: i32 = (x_i32 * INV_LN2_Q15) >> 30;
     
     // r = x − n·ln(2)
     let r: i32 = x_i32 - n * LN2_Q15;
 
-    // --- Étape 2 : Approximation polynomiale e^r sur [0, ln(2)[ ---
+    // Étape 2 : Approximation polynomiale e^r sur [0, ln(2)[ 
     // Taylor degré 4 : e^r ≈ 1 + r + r²/2 + r³/6 + r⁴/24
     let r2: i32 = (r * r) >> 15;
     let r3: i32 = (r2 * r) >> 15;
@@ -104,12 +105,12 @@ pub fn exp_q15(x: i16) -> i16 {
                 + ((r3 * INV_6_Q15) >> 15)   // r³/6
                 + ((r4 * INV_24_Q15) >> 15); // r⁴/24
 
-    // --- Étape 3 : Reconstruction e^x = 2^n · e^r ---
+    //  Étape 3 : Reconstruction e^x = 2^n · e^r 
     // Comme x < 0, n est toujours négatif ou nul. 
     // n est l'exposant de 2, on décale à droite de |n|.
     let result: i32 = er >> (-n);
 
-    // --- Saturation et cast final ---
+    //  Saturation et cast final 
     if result >= 32767 {
         32767
     } else if result <= 0 {
