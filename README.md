@@ -7,7 +7,7 @@
 
 ---
 
-## Update Version 0.1.2 
+## Update Version 0.2.0 
 Choix de #![forbid(unsafe_code)] pour plus de fiabilité et choix de opt-level = 3 dans Cargo.toml pour une vitesse maximale.
 
 ## ⚠️ Disclaimer : Domaine de définition
