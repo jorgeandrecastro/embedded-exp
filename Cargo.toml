@@ -13,7 +13,7 @@ categories = ["mathematics", "no-std", "embedded"]
 
 
 [profile.release]
-opt-level = 3      
+opt-level = "z"     
 lto = true           # Link-Time Optimization pour de meilleures performances
 codegen-units = 1    
 panic = "abort"      # Indispensable pour un environnement sans OS (no_std)

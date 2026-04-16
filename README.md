@@ -7,8 +7,9 @@
 
 ---
 
-## Update Version 0.2.0 
-Choix de #![forbid(unsafe_code)] pour plus de fiabilité et choix de opt-level = 3 dans Cargo.toml pour une vitesse maximale.
+## Update Version 0.2.1
+Choix de #![forbid(unsafe_code)] pour plus de fiabilité,
+j'avais mis 0.2.0 en opt-level = 3   mais sur une pico 2040 ca risque de créer des problèmes.
 
 ## ⚠️ Disclaimer : Domaine de définition
 
